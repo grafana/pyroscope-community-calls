@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+
+bloom:
+  auth:
+    salt: bloom-salt-v1
+    iterations: 25000
+    api-key-hash: cbe53961bfba1a3dad663c9e874194e17f918b6da6d46d95f055d2462aeaafac
+  downstream:
+    catalog: ${CATALOG_URL:http://localhost:8081}
+    pricing: ${PRICING_URL:http://localhost:8082}
+    orders: ${ORDERS_URL:http://localhost:8083}
