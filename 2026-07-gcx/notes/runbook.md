@@ -24,7 +24,7 @@ profiles/traces write on the demo stack. Rotate it after the call regardless.
 ## 0. Intro (5 min)
 
 - What's new in Pyroscope since last call.
-- Introduce gcx: one CLI for querying Grafana Cloud observability data —
+- Introduce gcx: one CLI for querying Grafana observability data —
   including profiles — designed for both humans and AI agents.
 
 ## 1. Meet Bloom (5 min)
