@@ -17,10 +17,6 @@ Run the stack (`make up`, `make load`) from that copy too, so the agent's
 fix-rebuild-verify loop works in place. Never launch Claude Code from
 `2026-07-gcx/` itself.
 
-**Secrets on stream**: `.env` in the copy holds the write-only cloud token; if
-the agent ever `cat`s it, that's recoverable — the token is scoped to
-profiles/traces write on the demo stack. Rotate it after the call regardless.
-
 ## 0. Intro (5 min)
 
 - What's new in Pyroscope since last call.
@@ -37,7 +33,7 @@ profiles/traces write on the demo stack. Rotate it after the call regardless.
 - Quick Grafana peek: Profiles Drilldown, the four `bloom-*` services. Framing:
   "the UI is great — but let's live in the terminal today."
 
-## 2. gcx profiles, manually (20 min)
+## 2. gcx profiles, manually (10 min)
 
 Discovery — what is there?
 
@@ -139,9 +135,9 @@ bad — nothing in its CPU profile stands out for `/products`. The traces do.
 Correlating traces, multiple profile types, and code is a lot of manual
 cross-referencing… which is exactly what agents are good at."
 
-## 3. Agent segment (20–25 min)
+## 3. Agent segment (10–15 min)
 
-Open Claude Code in the isolated copy (`~/demo/bloom`, fresh session,
+Open Claude Code or Codex in the isolated copy (`~/demo/bloom`, fresh session,
 screen-shared). Prompt 1 (investigation):
 
 > Our Bloom shop (services bloom-gateway, bloom-catalog, bloom-pricing,
@@ -164,9 +160,6 @@ Prompt 2 (fix + verify):
 - If time allows, prompt 3: "Anything you found that the CPU profile alone
   would have missed?" (N+1, lock, cache growth.)
 
-Fallbacks: rehearsal screenshots of prompts 1 and 2 results; if the rebuild is
-slow on stream, switch to the pre-built fixed images while narrating.
-
 ## 4. Wrap (5 min)
 
 - Recap: discover → leaderboard → flamegraph → other profile types → span
@@ -177,7 +170,7 @@ slow on stream, switch to the pre-built fixed images while narrating.
 
 - `docker compose run --rm -e CHECKOUT_RATE=25 k6 run /scripts/checkout-flow.js` —
   more checkout pressure (default 6/s).
-- JIT compilation dominates profiles for the first ~10 minutes after a restart;
+- JIT compilation dominates profiles for the first ~5 minutes after a restart;
   always give it warm-up time.
 - Memory growth on `orders` needs uptime (hours) — don't restart it before the
   demo if you want to show the leak trend.
