@@ -127,6 +127,10 @@ Traces from the same CLI — the N+1 that CPU profiles can't show
 gcx traces query '{ resource.service.name = "bloom-catalog" && span.db.system = "postgresql" } | count() > 15' --since 30m
 ```
 
+```sh
+gcx traces get <trace-id>
+```
+
 Every catalog listing/search trace carries 15–25 PostgreSQL spans — one review
 query per product.
 
