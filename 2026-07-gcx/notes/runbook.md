@@ -152,8 +152,8 @@ audit-trail lock, receipt cache, RestTemplate churn.
 
 Prompt 2 (fix + verify):
 
-> Fix the top three CPU issues. Then rebuild and restart with
-> `docker compose up -d --build`, wait a few minutes of load, and use gcx to
+> Fix only the top three CPU issues. Then rebuild and restart with
+> `docker compose up -d --build`, wait 5 minutes of load (don't restart the load test), and use gcx to
 > verify the improvement — compare CPU per service before/after.
 
 - The before/after `gcx profiles metrics --top` comparison is the money shot.
