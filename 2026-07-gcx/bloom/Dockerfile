@@ -7,8 +7,8 @@ RUN --mount=type=cache,target=/root/.m2,sharing=locked mvn -q -B -pl ${MODULE} -
 FROM eclipse-temurin:21-jre
 
 ARG OTEL_AGENT_VERSION=v2.15.0
-ARG PYROSCOPE_OTEL_VERSION=v2.0.5
-ARG PYROSCOPE_AGENT_VERSION=v2.5.1
+ARG PYROSCOPE_OTEL_VERSION=v2.1.0
+ARG PYROSCOPE_AGENT_VERSION=v2.8.0
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OTEL_AGENT_VERSION}/opentelemetry-javaagent.jar /opt/otel/opentelemetry-javaagent.jar
 ADD https://github.com/grafana/otel-profiling-java/releases/download/${PYROSCOPE_OTEL_VERSION}/pyroscope-otel-javaagent-extension.jar /opt/otel/pyroscope-otel-javaagent-extension.jar
 ADD https://github.com/grafana/pyroscope-java/releases/download/${PYROSCOPE_AGENT_VERSION}/pyroscope.jar /opt/otel/pyroscope.jar
