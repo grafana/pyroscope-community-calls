@@ -1,14 +1,34 @@
 COMPOSE := docker compose
 
-.PHONY: build up down clean logs ps smoke
+# Adaptive Profiles spots a new version through the service_git_ref label, so it
+# tracks the checkout: committing (or just editing) makes the next `up` a
+# genuine new version rather than a hand-typed one. Override to force a value.
+GIT_SHA := $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
+GIT_DIRTY := $(shell git rev-parse HEAD >/dev/null 2>&1 && { git diff --quiet HEAD 2>/dev/null || printf -- -dirty; })
+SERVICE_GIT_REF ?= $(GIT_SHA)$(GIT_DIRTY)
+export SERVICE_GIT_REF
+
+# Limit any `up` to one service, e.g. `make up-cloud SERVICE=pricing`.
+SERVICE ?=
+
+.PHONY: build up up-cloud down clean logs ps smoke version
 
 build:
 	$(COMPOSE) build
 
 # Brings up everything: Bloom, Postgres, the k6 load generator, Pyroscope,
-# Tempo and Grafana. Grafana is on http://localhost:3000 (admin/admin).
+# Tempo and Grafana, all local. Grafana is on http://localhost:3000.
 up:
-	$(COMPOSE) up -d --build
+	$(COMPOSE) up -d --build $(SERVICE)
+
+# Same stack, but the apps ship profiles and traces to the Grafana Cloud stack
+# configured in .env.cloud.
+up-cloud:
+	$(COMPOSE) --env-file .env.cloud up -d --build $(SERVICE)
+
+# What the next `up` will tag profiles with.
+version:
+	@echo $(SERVICE_GIT_REF)
 
 down:
 	$(COMPOSE) down

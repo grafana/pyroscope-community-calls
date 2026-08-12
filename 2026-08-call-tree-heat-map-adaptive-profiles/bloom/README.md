@@ -38,8 +38,12 @@ Requirements: Docker with Compose.
 make up      # build and start everything, including the load generator
 make ps
 make smoke   # one-shot request against each endpoint
-make down
+make down    # stop; ingested profiles and traces are kept
+make clean   # stop and wipe the data volumes
 ```
+
+Profiles, traces and the product database live in named volumes, so a restart —
+including an OrbStack or Docker restart — keeps whatever has been warmed up.
 
 | What                | Where                                                          |
 |---------------------|-----------------------------------------------------------------|
@@ -57,6 +61,44 @@ then Compose restarts it). No `make load` step any more.
 
 Nothing needs a `.env`. Copy `.env.example` to `.env` only to change the load
 profile or to point telemetry at a Grafana Cloud stack instead.
+
+## Switching to a Grafana Cloud stack
+
+For the Adaptive Profiles segment the apps ship to Grafana Cloud instead of the
+bundled backends:
+
+```sh
+cp .env.cloud.example .env.cloud   # fill in stack endpoints + a write token
+make up-cloud
+```
+
+This recreates the four Java services with the cloud endpoints. The bundled
+Pyroscope, Tempo and Grafana keep running and keep serving what they already
+ingested — they just stop receiving new data. `make up` switches back.
+
+Every profile carries a `service_git_ref` label, which is one of the labels
+Adaptive Profiles reads to detect a version change. The Makefile derives it from
+the checkout — the short commit SHA, plus `-dirty` when the working tree has
+uncommitted changes:
+
+```sh
+make version          # what the next `up` will tag profiles with, e.g. d4f91d2
+```
+
+So a real code change is a real version change. Edit a service, rebuild just
+that one, and Adaptive Profiles sees a new version for it while the others hold
+steady:
+
+```sh
+make up-cloud SERVICE=pricing
+```
+
+Pass `SERVICE_GIT_REF=...` to either `up` target to force a value instead. It
+does not belong in `.env.cloud`: the Makefile exports it, and an exported
+variable takes precedence over an env-file entry.
+
+Any `.env*` file except `*.example` is gitignored — these hold real tokens and
+this repository is public.
 
 ## Component versions
 

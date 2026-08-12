@@ -58,6 +58,18 @@ links straight into the trace in Tempo. Toggle: `profilesHeatmap`
   `individual` mode (one point per uploaded profile), reachable only from a
   Heatmap panel — see the optional dashboard below.
 
+## Adaptive Profiles
+
+That segment runs against a Grafana Cloud stack rather than the bundled
+backends: `cp .env.cloud.example .env.cloud`, fill it in, `make up-cloud`. Start
+this well before the call — Adaptive Profiles reasons about steady-state
+baselines and detects version changes from write traffic, so a tenant that first
+sees data mid-call has nothing to work with.
+
+`SERVICE_GIT_REF` (default `v1`) rides along as the `service_git_ref` label,
+which is one of the labels Adaptive Profiles reads for version detection.
+Bumping it and recreating a single service stages a "deploy" to boost against.
+
 ## Optional extra: the raw query option
 
 The provisioned *Bloom / profile heatmaps* dashboard drives the heatmap straight

@@ -10,7 +10,10 @@ x-telemetry-env: &telemetry-env
   PYROSCOPE_PROFILER_LOCK: 1ms
   PYROSCOPE_ALLOC_LIVE: ${PYROSCOPE_ALLOC_LIVE:-true}
   PYROSCOPE_UPLOAD_INTERVAL: 15s
-  PYROSCOPE_LABELS: ${PYROSCOPE_LABELS:-env=demo,namespace=bloom}
+  # service_git_ref is what Adaptive Profiles reads to spot a version change.
+  # The Makefile derives it from the checkout; this default only applies when
+  # docker compose is invoked directly.
+  PYROSCOPE_LABELS: ${PYROSCOPE_LABELS:-env=demo,namespace=bloom},service_git_ref=${SERVICE_GIT_REF:-unknown}
   OTEL_TRACES_EXPORTER: otlp
   OTEL_METRICS_EXPORTER: none
   OTEL_LOGS_EXPORTER: none
@@ -143,6 +146,13 @@ services:
     command:
       - "-config.file=/etc/pyroscope/config.yaml"
       - "-architecture.storage=v2"
+    # The image declares these three as anonymous volumes. Naming them keeps
+    # warmed-up profile data across a down/up cycle instead of starting empty
+    # and orphaning the old volumes. `make clean` still wipes them.
+    volumes:
+      - pyroscope-data:/data
+      - pyroscope-compactor:/data-compactor
+      - pyroscope-metastore:/data-metastore
     ports:
       - "4040:4040"
 
@@ -184,3 +194,6 @@ services:
 volumes:
   pgdata:
   tempodata:
+  pyroscope-data:
+  pyroscope-compactor:
+  pyroscope-metastore:

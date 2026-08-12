@@ -1,5 +1,9 @@
 # Session runbook — 2026-08 community call
 
+Segments 1–2 run on this local stack. The heatmap presenter brings their own
+stack, so nothing here affects them. Segment 4 runs against Grafana Cloud and
+needs preparation days ahead — see that section.
+
 Pre-flight: `make up` at least 30 minutes before going live so the time range is
 full, `make smoke` passes, storefront tab open at http://localhost:8080, and
 Profiles Drilldown open at
@@ -56,7 +60,40 @@ Optional aside if there is time: the *Bloom / profile heatmaps* dashboard shows
 the same thing driven straight from the query editor, plus the `individual`
 mode (one point per uploaded profile) that Drilldown does not expose.
 
-## 4. Wrap (5 min)
+## 4. Adaptive Profiles, on the cloud stack (15 min)
+
+Runs against Grafana Cloud, not the local stack. **Days before the call**, not
+at the switch: `make up-cloud` and leave it running. Adaptive Profiles works off
+steady-state baselines and its data plane analyses write traffic to spot version
+changes — a tenant that first sees traffic mid-call has nothing to reason about.
+
+Pre-flight for this segment:
+
+- [ ] Adaptive Profiles is enabled for the stack
+- [ ] The four `bloom-*` services appear there with a resolution baseline
+- [ ] Know the configured boost duration — insights are only generated when a
+      boost *reverts* to baseline, so they may not land inside the call window
+- [ ] `.env.cloud` filled in and `make up-cloud` verified once end to end
+
+Live — the version is the checkout, so the beat is an actual code change:
+
+```sh
+make version                    # e.g. d4f91d2, the label profiles carry now
+# edit something in pricing/, e.g. the promotion loop
+make up-cloud SERVICE=pricing   # rebuilds pricing only, new service_git_ref
+make version                    # now d4f91d2-dirty
+```
+
+Only `pricing` is recreated, so one service reports a new version while the
+other three hold steady — that is the change the data plane detects, and the
+resolution boost should follow for that service alone.
+
+Note `-dirty` only flips once: a second uncommitted edit leaves the label
+unchanged. Commit between takes, or pass `SERVICE_GIT_REF=...` explicitly, if
+you need to stage the deploy twice. The UI's manual trigger is the fallback if
+detection is slow on the day.
+
+## 5. Wrap (5 min)
 
 - Both views are in Grafana 13.1.3 today, toggles off by default, Drilldown
   preinstalled.
