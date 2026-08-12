@@ -1,0 +1,152 @@
+{
+  "uid": "bloom-profile-heatmaps",
+  "title": "Bloom / profile heatmaps",
+  "tags": ["bloom", "profiles", "heatmap"],
+  "timezone": "browser",
+  "editable": true,
+  "schemaVersion": 41,
+  "time": { "from": "now-30m", "to": "now" },
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "label": "Service",
+        "type": "custom",
+        "current": { "text": "bloom-pricing", "value": "bloom-pricing" },
+        "options": [
+          { "text": "bloom-gateway", "value": "bloom-gateway", "selected": false },
+          { "text": "bloom-catalog", "value": "bloom-catalog", "selected": false },
+          { "text": "bloom-pricing", "value": "bloom-pricing", "selected": true },
+          { "text": "bloom-orders", "value": "bloom-orders", "selected": false }
+        ],
+        "query": "bloom-gateway,bloom-catalog,bloom-pricing,bloom-orders"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "text",
+      "id": 1,
+      "title": "How to read this",
+      "gridPos": { "h": 5, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "mode": "markdown",
+        "content": "Each column is one step of the time range; each cell counts how many things landed in that y-bucket. A wide vertical spread is the point — it is what an averaged time series flattens away. Magenta marks are exemplars: click one to jump to the profile or span behind it.\n\n**Individual** puts one point per uploaded profile on the y-axis by its total. Pyroscope merges profiles that share a label set, so one service yields one point per step — hence the left panel spans the whole namespace rather than `$service`.\n\n**Span** puts one point per span, bucketed by span duration. Far denser, and the panel to spend time on: it is the latency distribution of `$service`, with the slow tail addressable one span at a time.\n\nThe Call Tree view is not on dashboards — it lives in **Explore** with the Pyroscope datasource and query type *Profile*."
+      }
+    },
+    {
+      "type": "heatmap",
+      "id": 2,
+      "title": "CPU per profile — all bloom services (individual)",
+      "description": "SelectHeatmap with query type 'individual': one point per uploaded profile, bucketed by its CPU total. Deliberately not filtered to $service — Pyroscope merges same-label profiles, so a single service contributes one point per step and cannot form a distribution on its own.",
+      "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+      "gridPos": { "h": 11, "w": 12, "x": 0, "y": 5 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+          "queryType": "metrics",
+          "profileTypeId": "process_cpu:cpu:nanoseconds:cpu:nanoseconds",
+          "labelSelector": "{namespace=\"bloom\"}",
+          "groupBy": [],
+          "includeHeatmap": true,
+          "heatmapType": "individual",
+          "includeExemplars": true
+        }
+      ],
+      "options": {
+        "calculate": false,
+        "cellGap": 1,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "Spectral",
+          "steps": 64
+        },
+        "exemplars": { "color": "rgba(255,0,255,0.7)" },
+        "filterValues": { "le": 1e-9 },
+        "legend": { "show": true },
+        "rowsFrame": { "layout": "auto" },
+        "showValue": "never",
+        "tooltip": { "mode": "single", "showColorScale": false, "yHistogram": true },
+        "yAxis": { "axisPlacement": "left", "reverse": false, "unit": "ns" }
+      }
+    },
+    {
+      "type": "heatmap",
+      "id": 3,
+      "title": "Span duration distribution — $service (span)",
+      "description": "SelectHeatmap with query type 'span': profile samples bucketed by the duration of the span they belong to. Needs span profiles, which the OTel Java agent + Pyroscope extension provide.",
+      "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+      "gridPos": { "h": 11, "w": 12, "x": 12, "y": 5 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+          "queryType": "metrics",
+          "profileTypeId": "process_cpu:cpu:nanoseconds:cpu:nanoseconds",
+          "labelSelector": "{service_name=\"$service\"}",
+          "groupBy": [],
+          "includeHeatmap": true,
+          "heatmapType": "span",
+          "includeExemplars": true
+        }
+      ],
+      "options": {
+        "calculate": false,
+        "cellGap": 1,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "Spectral",
+          "steps": 64
+        },
+        "exemplars": { "color": "rgba(255,0,255,0.7)" },
+        "filterValues": { "le": 1e-9 },
+        "legend": { "show": true },
+        "rowsFrame": { "layout": "auto" },
+        "showValue": "never",
+        "tooltip": { "mode": "single", "showColorScale": false, "yHistogram": true },
+        "yAxis": { "axisPlacement": "left", "reverse": false, "unit": "ns" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 4,
+      "title": "CPU over time — all bloom services",
+      "description": "The averaged view the heatmaps are meant to be contrasted with.",
+      "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "grafana-pyroscope-datasource", "uid": "bloom-pyroscope" },
+          "queryType": "metrics",
+          "profileTypeId": "process_cpu:cpu:nanoseconds:cpu:nanoseconds",
+          "labelSelector": "{namespace=\"bloom\"}",
+          "groupBy": ["service_name"]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ns",
+          "custom": { "fillOpacity": 10, "lineWidth": 1, "showPoints": "never" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      }
+    }
+  ]
+}

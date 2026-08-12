@@ -1,0 +1,2 @@
+CREATE DATABASE catalog OWNER bloom;
+CREATE DATABASE orders OWNER bloom;

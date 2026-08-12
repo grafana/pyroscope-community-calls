@@ -1,0 +1,12 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: pricing
+
+bloom:
+  pricing:
+    promotion-count: 400
+    skus-per-promotion: 400
+    sku-pool-size: 6000
