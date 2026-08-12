@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloom — cut stems and arrangements</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg transform='translate(16 16)'%3E%3Cellipse rx='5' ry='10' fill='%23C2354B' transform='rotate(0)'/%3E%3Cellipse rx='5' ry='10' fill='%23C2354B' transform='rotate(72)'/%3E%3Cellipse rx='5' ry='10' fill='%23C2354B' transform='rotate(144)'/%3E%3Cellipse rx='5' ry='10' fill='%23C2354B' transform='rotate(216)'/%3E%3Cellipse rx='5' ry='10' fill='%23C2354B' transform='rotate(288)'/%3E%3Ccircle r='4' fill='%23E9B94E'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="/">Bloom<span class="wordmark-dot">·</span></a>
+    <form class="search" id="search-form" role="search">
+      <input id="search-input" type="search" placeholder="Search stems — try “peony” or “midnight”"
+             aria-label="Search the catalog" autocomplete="off">
+      <button type="submit" class="search-go">Search</button>
+    </form>
+    <button class="cart-button" id="cart-button" aria-label="Open basket">
+      Basket <span class="cart-count" id="cart-count" hidden>0</span>
+    </button>
+  </header>
+
+  <p class="tagline">Cut stems and arrangements, packed fresh on the day of delivery.</p>
+
+  <main>
+    <div class="toolbar">
+      <p class="result-note" id="result-note">Loading the catalog…</p>
+      <nav class="pager" id="pager" aria-label="Catalog pages" hidden>
+        <button id="prev-page" aria-label="Previous page">‹</button>
+        <span id="page-note" class="page-note"></span>
+        <button id="next-page" aria-label="Next page">›</button>
+      </nav>
+    </div>
+    <section class="grid" id="grid" aria-live="polite"></section>
+  </main>
+
+  <footer class="footer">
+    <p>Bloom is a demo shop. The flowers are fictional; the latency is real.</p>
+  </footer>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-label="Your basket" hidden>
+    <div class="drawer-head">
+      <h2 class="drawer-title">Your basket</h2>
+      <button class="close" id="cart-close" aria-label="Close basket">×</button>
+    </div>
+    <div class="drawer-body" id="cart-body"></div>
+  </aside>
+
+  <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-label="Product details" hidden>
+    <div class="modal-card" id="detail-card"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

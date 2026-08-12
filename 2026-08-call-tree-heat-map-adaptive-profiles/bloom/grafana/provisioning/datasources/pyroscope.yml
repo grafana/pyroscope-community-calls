@@ -1,0 +1,25 @@
+apiVersion: 1
+
+datasources:
+  - name: Pyroscope (bloom)
+    uid: bloom-pyroscope
+    type: grafana-pyroscope-datasource
+    access: proxy
+    url: http://pyroscope:4040
+    isDefault: true
+    jsonData:
+      minStep: 15s
+
+  - name: Tempo (bloom)
+    uid: bloom-tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    jsonData:
+      tracesToProfiles:
+        datasourceUid: bloom-pyroscope
+        profileTypeId: process_cpu:cpu:nanoseconds:cpu:nanoseconds
+        customQuery: false
+        tags:
+          - key: "service.name"
+            value: "service_name"
