@@ -1,0 +1,9 @@
+target/
+.env
+# Any .env variant may hold real Grafana Cloud tokens; only *.example is tracked.
+.env.*
+!.env.*.example
+!.env.example
+*.log
+.idea/
+.vscode/

@@ -1,0 +1,46 @@
+version: v1
+
+# Source code mappings for Pyroscope's source code integration, which backs the
+# "Function details" view in Profiles Drilldown.
+#
+# Only the single longest-prefix match is tried, so these point at the 2026-09
+# tree.
+source_code:
+  mappings:
+    - language: java
+      function_name:
+        - prefix: com/bloom/gateway/
+      source:
+        local:
+          path: 2026-09-traces-to-profiles/bloom/gateway/src/main/java
+
+    - language: java
+      function_name:
+        - prefix: com/bloom/catalog/
+      source:
+        local:
+          path: 2026-09-traces-to-profiles/bloom/catalog/src/main/java
+
+    - language: java
+      function_name:
+        - prefix: com/bloom/pricing/
+      source:
+        local:
+          path: 2026-09-traces-to-profiles/bloom/pricing/src/main/java
+
+    - language: java
+      function_name:
+        - prefix: com/bloom/orders/
+      source:
+        local:
+          path: 2026-09-traces-to-profiles/bloom/orders/src/main/java
+
+    - language: java
+      function_name:
+        - prefix: java/
+      source:
+        github:
+          owner: openjdk
+          repo: jdk
+          ref: jdk-21-ga
+          path: src/java.base/share/classes
