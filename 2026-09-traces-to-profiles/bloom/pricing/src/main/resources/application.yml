@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: pricing
+
+bloom:
+  pricing:
+    promotion-count: 400
+    skus-per-promotion: 400
+    sku-pool-size: 6000
+    # Contrived cost knob for the discount optimizer: how many times the naive
+    # local search re-scores every promotion pair from scratch. Higher values
+    # make the pricing CPU hotspot larger, especially for big carts.
+    refinement-rounds: 2
+    # Safety cap on the eligible promotion set so a huge cart cannot run away.
+    max-eligible: 80

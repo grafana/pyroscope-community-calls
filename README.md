@@ -14,6 +14,10 @@ One directory per call, named `YYYY-MM-<topic>`:
 - [`2026-08-call-tree-heat-map-adaptive-profiles/`](2026-08-call-tree-heat-map-adaptive-profiles/) —
   two new ways to read profiles in Grafana: the Call Tree view in the Flame
   Graph package, and heatmaps of profile and span distributions.
+- [`2026-09-traces-to-profiles/`](2026-09-traces-to-profiles/) — the traces to
+  profiles integration, followed end to end: from a slow trace in Tempo to the
+  span profile that explains it, then to the span heatmap that shows how many
+  other requests share the problem.
 
 Each call directory has its own README covering what the session was about and how
 to run the demo yourself.
