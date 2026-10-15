@@ -27,7 +27,7 @@
             <!-- provided: the class at runtime comes from the pyroscope javaagent -->
             <groupId>io.pyroscope</groupId>
             <artifactId>agent</artifactId>
-            <version>2.5.1</version>
+            <version>2.9.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
