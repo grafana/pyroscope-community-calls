@@ -123,7 +123,7 @@ services:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8083"]
 
   k6:
-    image: grafana/k6:latest
+    image: grafana/k6:latest@sha256:3e4186aea62e11a45560bfc51e19eeafe82fc07ce069c78aff44b7ff893d9a5e
     profiles: ["load"]
     volumes:
       - ./load:/scripts:ro
@@ -133,7 +133,7 @@ services:
       DURATION: ${LOAD_DURATION:-20m}
 
   pyroscope:
-    image: grafana/pyroscope:latest
+    image: grafana/pyroscope:latest@sha256:8ade8d37ac58c20aca0054360fbcdef956a8242f48ad68e0ec67757f21d48e28
     profiles: ["local"]
     command:
       - "-config.file=/etc/pyroscope/config.yaml"
@@ -142,7 +142,7 @@ services:
       - "4040:4040"
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:latest@sha256:1ce31d6d7ffab62189685e8c47881d4a561c5d38bd0dbd66e40ca83cef07923d
     profiles: ["local"]
     command:
       - "-config.file=/etc/tempo.yaml"
@@ -153,7 +153,7 @@ services:
       - "3200:3200"
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:latest@sha256:dbbc38ea21103cefb50396340cd88afec779c7e070b0a7bf5a75b4ce46651d3f
     profiles: ["local"]
     ports:
       - "3000:3000"
