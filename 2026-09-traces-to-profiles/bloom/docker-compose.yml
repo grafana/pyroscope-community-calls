@@ -129,7 +129,7 @@ services:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8083"]
 
   k6:
-    image: grafana/k6:2.2.0
+    image: grafana/k6:2.3.0@sha256:2dd4756ec6e14e62778916e1eb850108e4b499304c02df56760fa0bdb0fba0b8
     command: ["run", "/scripts/checkout-flow.js"]
     restart: unless-stopped
     volumes:
