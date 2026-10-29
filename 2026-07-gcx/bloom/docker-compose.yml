@@ -30,7 +30,7 @@ x-healthcheck: &java-healthcheck
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16-alpine@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
     environment:
       POSTGRES_USER: bloom
       POSTGRES_PASSWORD: bloom
@@ -123,7 +123,7 @@ services:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8083"]
 
   k6:
-    image: grafana/k6:latest
+    image: grafana/k6:latest@sha256:3e4186aea62e11a45560bfc51e19eeafe82fc07ce069c78aff44b7ff893d9a5e
     profiles: ["load"]
     volumes:
       - ./load:/scripts:ro
@@ -133,7 +133,7 @@ services:
       DURATION: ${LOAD_DURATION:-20m}
 
   pyroscope:
-    image: grafana/pyroscope:latest
+    image: grafana/pyroscope:latest@sha256:ef9b48976386aa2781e84664dfdba7cc33a1b6793c0cc9d130812173a926ca1f
     profiles: ["local"]
     command:
       - "-config.file=/etc/pyroscope/config.yaml"
@@ -142,7 +142,7 @@ services:
       - "4040:4040"
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:latest@sha256:1ce31d6d7ffab62189685e8c47881d4a561c5d38bd0dbd66e40ca83cef07923d
     profiles: ["local"]
     command:
       - "-config.file=/etc/tempo.yaml"
@@ -153,7 +153,7 @@ services:
       - "3200:3200"
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:latest@sha256:488984b716c0862639f91a698adbe2862677a5a07bad42da5f03f3030883b205
     profiles: ["local"]
     ports:
       - "3000:3000"
