@@ -1,10 +1,10 @@
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3.9-eclipse-temurin-21@sha256:99e61abcff91a9b1333463bd8451fb18495d6eba9250ac66a338b518f8278320 AS build
 WORKDIR /src
 COPY . .
 ARG MODULE
 RUN --mount=type=cache,target=/root/.m2,sharing=locked mvn -q -B -pl ${MODULE} -am package -DskipTests
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre@sha256:0b99b3376fbb50dbf9c0af8535fdd5b8eb0d3fdfc8b1e4967f383b6919f6901a
 
 ARG OTEL_AGENT_VERSION=v2.15.0
 ARG PYROSCOPE_OTEL_VERSION=v2.1.0

@@ -33,7 +33,7 @@ x-healthcheck: &java-healthcheck
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16-alpine@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
     environment:
       POSTGRES_USER: bloom
       POSTGRES_PASSWORD: bloom
@@ -126,7 +126,7 @@ services:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8083"]
 
   k6:
-    image: grafana/k6:2.2.0
+    image: grafana/k6:2.2.0@sha256:9bd01d6941fca969cb61bb57d2da5ee9b385fe2aa8881df3798c196564d6ace6
     command: ["run", "/scripts/checkout-flow.js"]
     restart: unless-stopped
     volumes:
@@ -142,7 +142,7 @@ services:
   # SelectHeatmap, which backs the heatmap query option, is only served by the
   # v2 read path, so the v1-v2-dual default is not enough here.
   pyroscope:
-    image: grafana/pyroscope:2.2.1
+    image: grafana/pyroscope:2.2.1@sha256:70cf34fcb09d286080df909c33a95432df2a78ed4f6613b5e998ac17f90e4c3d
     command:
       - "-config.file=/etc/pyroscope/config.yaml"
       - "-architecture.storage=v2"
@@ -157,7 +157,7 @@ services:
       - "4040:4040"
 
   tempo:
-    image: grafana/tempo:3.0.2
+    image: grafana/tempo:3.0.2@sha256:cda87c212d8c584dc0b89e337e7ed648a5100feb657e5d528480ee4fa03dbbe3
     command:
       - "-config.file=/etc/tempo.yaml"
     volumes:
@@ -174,7 +174,7 @@ services:
   # Grafana's own OpenFeature client, which is only initialized for a signed-in
   # user, so the tab is missing there until you sign in as admin / bloom.
   grafana:
-    image: grafana/grafana:13.1.3
+    image: grafana/grafana:13.1.3@sha256:ab5cb380e3ff3172d6c8bd2e7cfd31cce977d2881b260e1f5bc089bf0b759b43
     ports:
       - "3000:3000"
     environment:
